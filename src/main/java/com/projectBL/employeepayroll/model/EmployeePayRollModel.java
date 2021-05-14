@@ -52,4 +52,20 @@ public class EmployeePayRollModel implements Serializable {
         this.notes=notes;
 
     }
+
+    public EmployeePayRollModel(EmployeePayRollModel employee) {
+        this.employeeId=employee.getEmployeeId();
+        this.name= employee.getName();
+        this.salary=employee.getSalary();
+        this.gender=employee.getGender();
+        this.profilePic=employee.getProfilePic();
+        this.department=employee.getDepartment();
+        this.startDate=employee.getStartDate();
+        this.notes=employee.getNotes();
+
+
+
+    }
+
+
 }

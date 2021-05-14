@@ -3,6 +3,7 @@ package com.projectBL.employeepayroll.controller;
 import com.projectBL.employeepayroll.dtoModel.EditPayrollDto;
 import com.projectBL.employeepayroll.dtoModel.EmployeePayrollDto;
 import com.projectBL.employeepayroll.dtoModel.ResponseDto;
+import com.projectBL.employeepayroll.model.EmployeePayRollModel;
 import com.projectBL.employeepayroll.services.IPayrollServices;
 import com.projectBL.employeepayroll.services.PayrollServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/employeepayrollservice")
 public class EmployeePayrollController {
+
     @Autowired
     IPayrollServices payrollServices = new PayrollServices();
 
@@ -50,6 +52,17 @@ public class EmployeePayrollController {
 
     }
 
+    @PostMapping("/addUser")
+    public ResponseEntity<ResponseDto> adduserModel(@RequestBody EmployeePayrollDto employee){
+        EmployeePayRollModel employeePayRollModel = payrollServices.addUsersModel(employee);
+
+        return new ResponseEntity<ResponseDto>(new ResponseDto("Employee added Successfully",
+                "200",employeePayRollModel),
+                HttpStatus.CREATED);
+
+
+    }
+
 
 
 
@@ -67,6 +80,15 @@ return new ResponseEntity<ResponseDto>(new ResponseDto("Employee deleted success
                                                         HttpStatus.CREATED);
 
 }
+
+    @DeleteMapping("/deleteuser/{id}")
+    public ResponseEntity<ResponseDto> deleteUserModel(@PathVariable("id") UUID employeeId){
+        EmployeePayRollModel employeePayRollModel =payrollServices.deleteUserModel(employeeId);
+        return new ResponseEntity<ResponseDto>(new ResponseDto("Employee deleted successfully",
+                "200",employeePayRollModel),
+                HttpStatus.CREATED);
+
+    }
 
 
 
@@ -86,6 +108,16 @@ public ResponseEntity<ResponseDto> findUserById(@RequestParam(value = "employeeI
 
 }
 
+    @GetMapping("/queryfindModel")
+    public ResponseEntity<ResponseDto> findUserByIdModel(@RequestParam(value = "employeeId") UUID employeeId){
+
+        EmployeePayRollModel employeePayRollModel =payrollServices.findUserByIdModel(employeeId);
+        return new ResponseEntity<ResponseDto>(new ResponseDto("emplyee you finding are"
+                ,"200",employeePayRollModel),
+                HttpStatus.OK);
+
+    }
+
 
 
 
@@ -95,6 +127,11 @@ public ResponseEntity<ResponseDto> findUserById(@RequestParam(value = "employeeI
 public ResponseEntity<List<EmployeePayrollDto>> findAllUser(){
 return ResponseEntity.status(HttpStatus.OK).body(payrollServices.findAllUsers());
 }
+
+    @GetMapping("/model/get")
+    public ResponseEntity<List<EmployeePayRollModel>> findAllUserModel(){
+        return ResponseEntity.status(HttpStatus.OK).body(payrollServices.findAllUsersModel());
+    }
 
 
 
@@ -121,5 +158,15 @@ public ResponseEntity<ResponseDto> updateAnEmployee(@RequestBody EditPayrollDto 
                                                         HttpStatus.CREATED);
 
   }
+
+
+    @PutMapping("/modelup/update")
+    public ResponseEntity<ResponseDto> updateAnEmployeeModel(@RequestBody EditPayrollDto user){
+        EmployeePayRollModel employeePayRollModel = payrollServices.updateUserDetailsModel(user);
+        return new ResponseEntity<ResponseDto>(new ResponseDto("Employee detailes updated successfully for " ,
+                "200",employeePayRollModel),
+                HttpStatus.CREATED);
+
+    }
 
 }
