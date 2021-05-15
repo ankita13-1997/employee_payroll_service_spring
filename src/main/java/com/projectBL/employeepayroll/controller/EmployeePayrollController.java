@@ -9,8 +9,10 @@ import com.projectBL.employeepayroll.services.PayrollServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +44,13 @@ public class EmployeePayrollController {
     "notes": "hello this is me"}'*/
 
     @PostMapping("/add")
-    public ResponseEntity<ResponseDto> adduser(@RequestBody EmployeePayrollDto employee){
+    public ResponseEntity<ResponseDto> adduser(@RequestBody @Valid EmployeePayrollDto employee,
+                                               BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return new ResponseEntity<ResponseDto>(new ResponseDto(bindingResult.getAllErrors().
+                                                   get(0).getDefaultMessage(),"100",null),
+                                                   HttpStatus.BAD_REQUEST);
+        }
         EmployeePayrollDto employeePayrollDto = payrollServices.addUsers(employee);
 
         return new ResponseEntity<ResponseDto>(new ResponseDto("Employee added Successfully",
@@ -53,7 +61,15 @@ public class EmployeePayrollController {
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<ResponseDto> adduserModel(@RequestBody EmployeePayrollDto employee){
+    public ResponseEntity<ResponseDto> adduserModel(@RequestBody @Valid EmployeePayrollDto employee,
+                                                    BindingResult bindingResult){
+
+        if (bindingResult.hasErrors()){
+            return new ResponseEntity<ResponseDto>(new ResponseDto(bindingResult.getAllErrors().
+                    get(0).getDefaultMessage(),"100",null),
+                    HttpStatus.BAD_REQUEST);
+        }
+
         EmployeePayRollModel employeePayRollModel = payrollServices.addUsersModel(employee);
 
         return new ResponseEntity<ResponseDto>(new ResponseDto("Employee added Successfully",
@@ -151,7 +167,14 @@ return ResponseEntity.status(HttpStatus.OK).body(payrollServices.findAllUsers())
  }' 'http://localhost:8080/payroll-context/employeepayrollservice/update'
 */
 @PutMapping("/update")
-public ResponseEntity<ResponseDto> updateAnEmployee(@RequestBody EditPayrollDto user){
+public ResponseEntity<ResponseDto> updateAnEmployee(@RequestBody @Valid EditPayrollDto user,
+                                                    BindingResult bindingResult){
+    if (bindingResult.hasErrors()){
+        return new ResponseEntity<ResponseDto>(new ResponseDto(bindingResult.getAllErrors().
+                get(0).getDefaultMessage(),"100",null),
+                HttpStatus.BAD_REQUEST);
+    }
+
     EmployeePayrollDto employeePayrollDto = payrollServices.updateUserDetails(user);
     return new ResponseEntity<ResponseDto>(new ResponseDto("Employee detailes updated successfully for " ,
                                                        "200",employeePayrollDto),
@@ -161,7 +184,14 @@ public ResponseEntity<ResponseDto> updateAnEmployee(@RequestBody EditPayrollDto 
 
 
     @PutMapping("/modelup/update")
-    public ResponseEntity<ResponseDto> updateAnEmployeeModel(@RequestBody EditPayrollDto user){
+    public ResponseEntity<ResponseDto> updateAnEmployeeModel(@RequestBody @Valid EditPayrollDto user,
+                                                             BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return new ResponseEntity<ResponseDto>(new ResponseDto(bindingResult.getAllErrors().
+                    get(0).getDefaultMessage(),"100",null),
+                    HttpStatus.BAD_REQUEST);
+        }
+
         EmployeePayRollModel employeePayRollModel = payrollServices.updateUserDetailsModel(user);
         return new ResponseEntity<ResponseDto>(new ResponseDto("Employee detailes updated successfully for " ,
                 "200",employeePayRollModel),
